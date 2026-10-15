@@ -100,6 +100,10 @@ pip install -r requirements.txt
 2. **[`workflows/3d_pixal3d_trellis2_sota_decimate.json`](workflows/3d_pixal3d_trellis2_sota_decimate.json)**: Single-image to 3D PBR model via Pixal3D / Trellis2 with integrated SOTA 50k retopology & PBR baking.
 3. **[`workflows/PixelArtistry_Qwen2.1_Turnaround_to_Pixal3D_Multiview_sota_decimate.json`](workflows/PixelArtistry_Qwen2.1_Turnaround_to_Pixal3D_Multiview_sota_decimate.json)**: Qwen 2.1 multi-view turnaround generation to Pixal3D multi-view 3D model with integrated SOTA 50k retopology & PBR baking.
 
+### License
+
+Released under the [MIT License](LICENSE).
+
 ---
 ---
 
@@ -179,3 +183,9 @@ pip install -r requirements.txt
 1. **[`workflows/dsh_uv_decimate_keep_uv.json`](workflows/dsh_uv_decimate_keep_uv.json)**：独立版 GLB 高模减面与重拓扑工作流（`Load3DAdvanced` $\rightarrow$ `Get3DComponents` $\rightarrow$ `DecimateMeshKeepUV` $\rightarrow$ `MeshToFile3D` $\rightarrow$ `Preview3DAdvanced` + `Save3DAdvanced`）。
 2. **[`workflows/3d_pixal3d_trellis2_sota_decimate.json`](workflows/3d_pixal3d_trellis2_sota_decimate.json)**：Pixal3D / Trellis2 单图生成 3D 模型 + SOTA 重拓扑减面一体化工作流。
 3. **[`workflows/PixelArtistry_Qwen2.1_Turnaround_to_Pixal3D_Multiview_sota_decimate.json`](workflows/PixelArtistry_Qwen2.1_Turnaround_to_Pixal3D_Multiview_sota_decimate.json)**：Qwen 2.1 四视图生成转 Pixal3D 多视图 3D 模型 + SOTA 重拓扑减面一体化工作流。
+
+---
+
+### 六、开源协议（License）
+
+本项目基于 [MIT License](LICENSE) 开源。
