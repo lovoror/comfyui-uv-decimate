@@ -1,0 +1,328 @@
+{
+  "id": "dsh-uv-decimate-sota",
+  "revision": 0,
+  "last_node_id": 7,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Load3DAdvanced",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        420,
+        460
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model_3d",
+          "type": "FILE_3D",
+          "slot_index": 0,
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "model_3d_info",
+          "type": "LOAD3D_MODEL_INFO",
+          "slot_index": 1,
+          "links": null
+        },
+        {
+          "name": "camera_info",
+          "type": "LOAD3D_CAMERA",
+          "slot_index": 2,
+          "links": null
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "slot_index": 3,
+          "links": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "slot_index": 4,
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Load3DAdvanced"
+      },
+      "widgets_values": [
+        "3d/dsh_ship_00016.glb",
+        "",
+        1024,
+        1024
+      ]
+    },
+    {
+      "id": 2,
+      "type": "Get3DComponents",
+      "pos": [
+        480,
+        120
+      ],
+      "size": [
+        280,
+        80
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_3d",
+          "type": "FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_OBJ,FILE_3D_STL,FILE_3D",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mesh",
+          "type": "MESH",
+          "slot_index": 0,
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Get3DComponents"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 3,
+      "type": "DecimateMeshKeepUV",
+      "pos": [
+        820,
+        60
+      ],
+      "size": [
+        360,
+        310
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mesh",
+          "type": "MESH",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mesh",
+          "type": "MESH",
+          "slot_index": 0,
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DecimateMeshKeepUV"
+      },
+      "widgets_values": [
+        "50k (recommended)",
+        50000,
+        true,
+        "auto",
+        true,
+        0.05,
+        0.5,
+        2048,
+        0.0,
+        false
+      ]
+    },
+    {
+      "id": 4,
+      "type": "MeshToFile3D",
+      "pos": [
+        1240,
+        120
+      ],
+      "size": [
+        280,
+        80
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mesh",
+          "type": "MESH",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model_3d",
+          "type": "FILE_3D_GLB",
+          "slot_index": 0,
+          "links": [
+            4,
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MeshToFile3D"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "Preview3DAdvanced",
+      "pos": [
+        1580,
+        20
+      ],
+      "size": [
+        440,
+        440
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_3d",
+          "type": "FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_FBX,FILE_3D_OBJ,FILE_3D_STL,FILE_3D_USDZ,FILE_3D",
+          "link": 4
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Preview3DAdvanced"
+      },
+      "widgets_values": [
+        "",
+        1024,
+        1024
+      ]
+    },
+    {
+      "id": 6,
+      "type": "Save3DAdvanced",
+      "pos": [
+        1580,
+        500
+      ],
+      "size": [
+        440,
+        180
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model_3d",
+          "type": "FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_FBX,FILE_3D_OBJ,FILE_3D_STL,FILE_3D_USDZ,FILE_3D",
+          "link": 5
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Save3DAdvanced"
+      },
+      "widgets_values": [
+        "3d/dsh_sota_decimated",
+        "",
+        1024,
+        1024
+      ]
+    },
+    {
+      "id": 7,
+      "type": "Note",
+      "pos": [
+        820,
+        410
+      ],
+      "size": [
+        360,
+        290
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "SOTA UV Decimate & Retopology 说明",
+      "properties": {},
+      "color": "#233",
+      "bgcolor": "#355",
+      "widgets_values": [
+        "Decimate Mesh (Keep UV) — SOTA 自适应重拓扑与减面：\n\n1. strategy = auto（默认）：\n   - 自动诊断输入模型的 UV 岛碎片度与接缝锁死下限 (seam_lock_floor)。\n   - 当目标面数高于接缝饥饿阈值（如 100k）时，自动采用 tex_qem（Garland-Heckbert 5D 纹理度量二次误差坍缩 + UV 空间组合 TBN 法线重烘焙），零重采样保留原 UV。\n   - 当目标面数较低（如 10k / 20k / 30k / 50k）且原模型存在碎片化 UV 岛（Pixal3D/Trellis2 常见上千个碎片岛）时，自动切换至 retopo_bake（解锁全部 UV 接缝 -> 3D QEM/各向同性重拓扑 -> xatlas 展 UV -> GPU BVH 外壳感知全套 PBR 烘焙），彻底消除帆面/船体的揉皱折面与舵轮撕裂。\n\n2. 关键参数：\n   - preset: 10k / 20k / 30k / 50k (recommended) / 100k / custom\n   - rebake_normals: 将高模切线空间法线合成并重投影至新低模平滑 TBN 帧，消除低模棱角感。\n   - uv_weight: 0.05（平衡 3D 表面平滑度与纹理边界保持）。\n   - quality_thr: 0.5（防止狭长针状三角形）。"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_OBJ,FILE_3D_STL,FILE_3D"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      0,
+      "MESH"
+    ],
+    [
+      3,
+      3,
+      0,
+      4,
+      0,
+      "MESH"
+    ],
+    [
+      4,
+      4,
+      0,
+      5,
+      0,
+      "FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_FBX,FILE_3D_OBJ,FILE_3D_STL,FILE_3D_USDZ,FILE_3D"
+    ],
+    [
+      5,
+      4,
+      0,
+      6,
+      0,
+      "FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_FBX,FILE_3D_OBJ,FILE_3D_STL,FILE_3D_USDZ,FILE_3D"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.75,
+      "offset": [
+        160,
+        220
+      ]
+    }
+  },
+  "version": 0.4
+}
