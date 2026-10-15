@@ -81,7 +81,7 @@ pip install -r requirements.txt
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `preset` | Combo | `"50k (recommended)"` | Target face count preset: `10k`, `20k`, `30k`, `50k (recommended)`, `100k`, or `custom`. |
+| `preset` | Combo | `"50k (recommended)"` | Target face count preset: `1k`, `2k`, `5k`, `10k`, `20k`, `30k`, `50k (recommended)`, `100k`, or `custom` (automatically syncs `target_faces` in the UI). |
 | `target_faces` | `INT` | `50000` | Custom target triangle count (used when `preset = custom`). |
 | `clean` | `BOOLEAN` | `True` | Weld duplicate 3D vertices, remove duplicate faces, and drop unreferenced vertices before decimation. |
 | `strategy` | Combo | `"auto"` | `auto` (recommended), `tex_qem` (5D QEM keeping original UV layout), or `retopo_bake` (UV-free retopology + `xatlas` + GPU BVH PBR baking). |
@@ -161,7 +161,7 @@ pip install -r requirements.txt
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |---|---|---|---|
-| `preset` | 下拉菜单 | `"50k (recommended)"` | 预设面数档位：`10k`、`20k`、`30k`、`50k (recommended)`、`100k`、`custom`。 |
+| `preset` | 下拉菜单 | `"50k (recommended)"` | 预设面数档位：`1k`、`2k`、`5k`、`10k`、`20k`、`30k`、`50k (recommended)`、`100k`、`custom`（前端切换时自动联动更新 `target_faces`）。 |
 | `target_faces` | `INT` | `50000` | 当 `preset` 选为 `custom` 时生效的目标三角形面数。 |
 | `clean` | `BOOLEAN` | `True` | 减面前自动焊接重复 3D 顶点、移除重复面与孤立顶点。 |
 | `strategy` | 下拉菜单 | `"auto"` | `auto`（推荐，自动根据接缝饥饿度路由）、`tex_qem`（5D 纹理 QEM 保原 UV）、`retopo_bake`（解锁接缝重拓扑 + `xatlas` + GPU BVH 烘焙）。 |

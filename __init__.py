@@ -41,6 +41,6 @@ except ImportError:  # loaded as a plain file rather than a package
     NODE_DISPLAY_NAME_MAPPINGS = _mod.NODE_DISPLAY_NAME_MAPPINGS
 
 VERSION = "0.1.0"
-WEB_DIRECTORY = None
+WEB_DIRECTORY = "./web"
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "VERSION", "WEB_DIRECTORY"]

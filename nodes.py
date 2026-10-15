@@ -38,6 +38,9 @@ CATEGORY = "3d/decimate"
 PRESET_CUSTOM = "custom"
 #: Canonical presets. ``custom`` (0) means "use the target_faces slider".
 PRESET_FACES = {
+    "1k": 1000,
+    "2k": 2000,
+    "5k": 5000,
     "10k": 10000,
     "20k": 20000,
     "30k": 30000,
@@ -45,13 +48,32 @@ PRESET_FACES = {
     "100k": 100000,
     PRESET_CUSTOM: 0,
 }
-PRESET_CHOICES = ["10k", "20k", "30k", "50k (recommended)", "100k", PRESET_CUSTOM]
+PRESET_CHOICES = [
+    "1k",
+    "2k",
+    "5k",
+    "10k",
+    "20k",
+    "30k",
+    "50k (recommended)",
+    "100k",
+    PRESET_CUSTOM,
+]
 DEFAULT_PRESET = "50k (recommended)"
 #: Preset spellings of the previous slice: still resolved, so old workflows keep their budget.
 LEGACY_PRESET_FACES = {"50k": 50000, "200k": 200000, "500k": 500000}
 #: The previous slice's ``FACE_PRESETS`` dict, kept importable for external callers.
-FACE_PRESETS = {"10k": 10000, "20k": 20000, "30k": 30000, "50k": 50000, "100k": 100000,
-                "200k": 200000}
+FACE_PRESETS = {
+    "1k": 1000,
+    "2k": 2000,
+    "5k": 5000,
+    "10k": 10000,
+    "20k": 20000,
+    "30k": 30000,
+    "50k": 50000,
+    "100k": 100000,
+    "200k": 200000,
+}
 
 DEFAULT_TARGET_FACES = 50000
 MIN_TARGET_FACES = 100
