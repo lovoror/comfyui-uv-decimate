@@ -22,17 +22,21 @@ from __future__ import annotations
 import logging
 import time
 from types import SimpleNamespace
+import numpy as np
 
 try:
-    from . import mesh_convert, uv_pipeline
+    from . import mesh_convert, uv_pipeline, uv_layout
 except ImportError:  # loaded as a plain directory rather than a package
     import mesh_convert
     import uv_pipeline
+    import uv_layout
 
 LOGGER = logging.getLogger("comfyui_uv_decimate")
 
 NODE_NAME = "DecimateMeshKeepUV"
 DISPLAY_NAME = "Decimate Mesh (Keep UV)"
+UV_LAYOUT_NODE_NAME = "PreviewUVLayout"
+UV_LAYOUT_DISPLAY_NAME = "Preview UV Layout (2D & Utilization)"
 CATEGORY = "3d/decimate"
 
 PRESET_CUSTOM = "custom"
@@ -445,7 +449,105 @@ class DecimateMeshKeepUV:
             return uv_pipeline.run(mesh, **call)
 
 
-NODE_CLASS_MAPPINGS = {NODE_NAME: DecimateMeshKeepUV}
-NODE_DISPLAY_NAME_MAPPINGS = {NODE_NAME: DISPLAY_NAME}
+class PreviewUVLayout:
+    """ComfyUI node that renders a 2D UV layout diagnostic image and computes UV utilization %."""
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "mesh": ("MESH", {
+                    "tooltip": "3D mesh with UV coordinates (TEXCOORD_0) to visualize and measure."}),
+                "resolution": ("INT", {
+                    "default": 1024, "min": 256, "max": 4096, "step": 128,
+                    "tooltip": "2D UV canvas resolution in pixels (width and height)."}),
+                "background_mode": (list(uv_layout.BACKGROUND_MODES), {
+                    "default": "texture_and_islands",
+                    "tooltip": "texture_and_islands: blend base texture with per-island colors; "
+                               "uv_islands: golden-ratio color per connected UV chart; "
+                               "texture: mesh texture over UV space; "
+                               "distortion_stretch: 3D-to-2D texel stretch heatmap (blue=compressed, green=ideal, red=stretched); "
+                               "dark_grid: technical dark UV grid."}),
+            },
+            "optional": {
+                "show_wireframe": ("BOOLEAN", {
+                    "default": True,
+                    "tooltip": "Draw 2D UV triangle wireframe edges."}),
+                "highlight_seams": ("BOOLEAN", {
+                    "default": True,
+                    "tooltip": "Highlight UV island boundary/seam edges in cyan and overlapping UVs in magenta."}),
+                "wireframe_opacity": ("FLOAT", {
+                    "default": 0.65, "min": 0.0, "max": 1.0, "step": 0.05,
+                    "tooltip": "Opacity of the UV wireframe and seam overlay."}),
+                "show_hud": ("BOOLEAN", {
+                    "default": True,
+                    "tooltip": "Render a top HUD header bar showing UV utilization %, island count, overlap %, and seam lock floor."}),
+            },
+            "hidden": {"node_id": "UNIQUE_ID"},
+        }
+
+    RETURN_TYPES = ("IMAGE", "FLOAT", "INT", "STRING")
+    RETURN_NAMES = ("uv_layout_image", "uv_utilization_pct", "uv_islands", "uv_report")
+    FUNCTION = "execute"
+    CATEGORY = CATEGORY
+    DESCRIPTION = ("Visualize 2D UV layout, connected UV islands, seam borders, UV overlaps, "
+                   "and 3D-to-2D stretch distortion, and measure exact UV packing utilization %.")
+
+    def execute(
+        self,
+        mesh,
+        resolution=1024,
+        background_mode="texture_and_islands",
+        show_wireframe=True,
+        highlight_seams=True,
+        wireframe_opacity=0.65,
+        show_hud=True,
+        node_id=None,
+    ):
+        torch = _torch()
+        res = _coerce_int(resolution, 1024, 256, 4096)
+        bg_mode = _coerce_choice(background_mode, uv_layout.BACKGROUND_MODES, "texture_and_islands")
+        wf = _coerce_bool(show_wireframe, True)
+        seams = _coerce_bool(highlight_seams, True)
+        opacity = _coerce_float(wireframe_opacity, 0.65, 0.0, 1.0)
+        hud = _coerce_bool(show_hud, True)
+
+        payload = mesh_convert.to_payload(mesh)
+        canvas, report = uv_layout.render_uv_layout(
+            payload,
+            resolution=res,
+            background_mode=bg_mode,
+            show_wireframe=wf,
+            highlight_seams=seams,
+            wireframe_opacity=opacity,
+            show_hud=hud,
+        )
+        _emit(
+            node_id,
+            "UV utilization: %.2f%% | islands: %d | overlap: %.2f%% | seam edges: %.1f%%"
+            % (
+                report.utilization_pct,
+                report.n_islands,
+                report.overlap_pct,
+                report.seam_edge_ratio * 100.0,
+            ),
+        )
+        img_tensor = torch.from_numpy(np.ascontiguousarray(canvas, dtype=np.float32)).unsqueeze(0)
+        return (
+            img_tensor,
+            float(round(report.utilization_pct, 4)),
+            int(report.n_islands),
+            report.format_text(),
+        )
+
+
+NODE_CLASS_MAPPINGS = {
+    NODE_NAME: DecimateMeshKeepUV,
+    UV_LAYOUT_NODE_NAME: PreviewUVLayout,
+}
+NODE_DISPLAY_NAME_MAPPINGS = {
+    NODE_NAME: DISPLAY_NAME,
+    UV_LAYOUT_NODE_NAME: UV_LAYOUT_DISPLAY_NAME,
+}
 #: Previous slice's name for the node id.
 NODE_ID = NODE_NAME

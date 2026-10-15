@@ -94,6 +94,26 @@ pip install -r requirements.txt
 
 ---
 
+### Node Reference: `Preview UV Layout (2D & Utilization)` (`PreviewUVLayout`)
+
+Renders a 2D UV layout diagnostic image with a top HUD bar and returns quantitative UV packing utilization metrics:
+
+| Parameter / Output | Type | Default / Role | Description |
+|---|---|---|---|
+| `mesh` | `MESH` | Input | Input 3D mesh containing `TEXCOORD_0` UVs. |
+| `resolution` | `INT` | `1024` | 2D UV canvas resolution (`256`–`4096`). |
+| `background_mode` | Combo | `"texture_and_islands"` | `texture_and_islands` (blend texture with island colors), `uv_islands` (golden-ratio chart colors), `texture`, `distortion_stretch` (3D-to-2D stretch heatmap), or `dark_grid`. |
+| `show_wireframe` | `BOOLEAN` | `True` | Draw 2D UV triangle wireframe edges. |
+| `highlight_seams` | `BOOLEAN` | `True` | Highlight UV island boundary/seam edges in cyan and overlapping UVs in magenta. |
+| `wireframe_opacity` | `FLOAT` | `0.65` | Opacity of wireframe and seam overlay (`0.0`–`1.0`). |
+| `show_hud` | `BOOLEAN` | `True` | Render a top HUD header displaying UV Utilization %, UV Islands, Overlap %, Seam Lock Floor, and Texel Stretch. |
+| **Output 0**: `uv_layout_image` | `IMAGE` | Output | 2D UV layout visualization image (`(1, H, W, 3)`), ready for `PreviewImage` / `SaveImage`. |
+| **Output 1**: `uv_utilization_pct` | `FLOAT` | Output | Exact 2D UV space coverage percentage (`0.0`–`100.0`). |
+| **Output 2**: `uv_islands` | `INT` | Output | Number of connected UV islands (charts). |
+| **Output 3**: `uv_report` | `STRING` | Output | Multi-line diagnostic summary (utilization %, overlap %, islands, seam lock floor, stretch p50/p95). |
+
+---
+
 ### Bundled Workflows (`workflows/`)
 
 1. **[`workflows/dsh_uv_decimate_keep_uv.json`](workflows/dsh_uv_decimate_keep_uv.json)**: Standalone GLB loading (`Load3DAdvanced` $\rightarrow$ `Get3DComponents` $\rightarrow$ `DecimateMeshKeepUV` $\rightarrow$ `MeshToFile3D` $\rightarrow$ `Preview3DAdvanced` + `Save3DAdvanced`).
@@ -175,6 +195,22 @@ pip install -r requirements.txt
 | `bake_resolution` | `INT` | `2048` | `retopo_bake` 模式下 PBR 四通道贴图烘焙分辨率（`512`～`4096`）。 |
 | `crease_angle_deg` | `FLOAT` | `0.0` | 硬边折痕角阈值（`0.0` 表示全焊接平滑法线，配合重烘焙法线贴图效果最佳）。 |
 | `isotropic_remesh` | `BOOLEAN` | `False` | 在 `retopo_bake` 模式下是否在 `xatlas` 展 UV 前执行 AutoRemesher 风格等边各向同性重网格化。 |
+
+#### 附：二维 UV 布局与利用率分析节点（`PreviewUVLayout` / `Preview UV Layout (2D & Utilization)`）
+
+| 参数 / 输出项 | 类型 | 默认值 / 角色 | 说明 |
+|---|---|---|---|
+| `mesh` | `MESH` | 输入 | 待分析的 3D 网格（减面前或减面后均可接入）。 |
+| `resolution` | `INT` | `1024` | 2D UV 画布分辨率（`256`～`4096`）。 |
+| `background_mode` | 下拉菜单 | `"texture_and_islands"` | `texture_and_islands`（贴图+UV岛着色混合）、`uv_islands`（按连通 UV 岛黄金分割配色）、`texture`（纯贴图）、`distortion_stretch`（3D→2D 面积拉伸畸变热力图：蓝=压缩、绿=等距、红=拉伸）、`dark_grid`（暗色技术坐标网格）。 |
+| `show_wireframe` | `BOOLEAN` | `True` | 绘制二维 UV 三角形网格线。 |
+| `highlight_seams` | `BOOLEAN` | `True` | 用高亮青色标出 UV 岛接缝边界，用洋红色标出 UV 重叠区域。 |
+| `wireframe_opacity` | `FLOAT` | `0.65` | 网格线与接缝叠加层不透明度（`0.0`～`1.0`）。 |
+| `show_hud` | `BOOLEAN` | `True` | 在图像顶部绘制诊断信息栏（UV 利用率进度条、UV 岛数、重叠率、接缝锁定下限、拉伸比 P50/P95）。 |
+| **输出 0**：`uv_layout_image` | `IMAGE` | 输出 | 二维 UV 布局与利用率可视化图像，可直接连入 `PreviewImage` 或 `SaveImage`。 |
+| **输出 1**：`uv_utilization_pct` | `FLOAT` | 输出 | UV 空间实际覆盖利用率百分比（`0.0`～`100.0`）。 |
+| **输出 2**：`uv_islands` | `INT` | 输出 | 连通 UV 岛（Chart）数量。 |
+| **输出 3**：`uv_report` | `STRING` | 输出 | 多行诊断文本报告（覆盖率、理论面积和、重叠率、岛数、接缝锁定顶点、拉伸畸变）。 |
 
 ---
 
